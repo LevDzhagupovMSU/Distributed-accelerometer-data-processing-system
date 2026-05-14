@@ -1,0 +1,1 @@
+enum class ErrorType{ CONNECTION, PROTOCOL, INTERNAL };
