@@ -73,3 +73,6 @@ find_package(nlohmann_json REQUIRED)
 target_link_libraries(task2_server nlohmann_json::nlohmann_json)
 target_link_libraries(task2_client_a nlohmann_json::nlohmann_json)
 target_link_libraries(task2_client_b nlohmann_json::nlohmann_json)
+
+enable_testing()
+add_subdirectory(tests)

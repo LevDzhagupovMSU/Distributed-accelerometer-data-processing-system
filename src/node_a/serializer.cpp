@@ -23,23 +23,34 @@ nlohmann::json Serializer::to_json(const AccelModule& packet){
     return j;
 }
 
-AccelPacket from_json(const nlohmann::json& j){
+AccelPacket Serializer::from_json(const nlohmann::json& j){
     AccelPacket packet;
     
+    packet.x = 0.0;
+    packet.y = 0.0;
+    packet.z = 0.0;
+    packet.timestamp = 0;
+    packet.version = ProtocolVersion::VERSION_1;
+    
+    if (j.contains("x")) {
+        packet.x = j["x"];
+    }
+    if (j.contains("y")) {
+        packet.y = j["y"];
+    }
+    if (j.contains("z")) {
+        packet.z = j["z"];
+    }
+    if (j.contains("timestamp")) {
+        packet.timestamp = j["timestamp"];
+    }
     if (j.contains("version")) {
         uint32_t ver = j["version"];
         if (ver != static_cast<int>(ProtocolVersion::VERSION_1)) {
             syslog(LOG_WARNING, "[PACKET] Unknown protocol version: %u, assuming V1.0", ver);
         }
         packet.version = ProtocolVersion::VERSION_1;
-    } else {
-        packet.version = ProtocolVersion::VERSION_1;  
     }
-    
-    packet.x = j["x"];
-    packet.y = j["y"];
-    packet.z = j["z"];
-    packet.timestamp = j["timestamp"];
     
     return packet;
 }
@@ -47,6 +58,16 @@ AccelPacket from_json(const nlohmann::json& j){
 AccelModule Serializer::from_json(const nlohmann::json& j, bool){
     AccelModule packet;
     
+    packet.module = 0.0;
+    packet.timestamp = 0;
+    packet.version = ProtocolVersion::VERSION_1;
+    
+    if (j.contains("module")) {
+        packet.module = j["module"];
+    }
+    if (j.contains("timestamp")) {
+        packet.timestamp = j["timestamp"];
+    }
     if (j.contains("version")) {
         uint32_t ver = j["version"];
         if (ver != static_cast<int>(ProtocolVersion::VERSION_1)) {
@@ -54,9 +75,6 @@ AccelModule Serializer::from_json(const nlohmann::json& j, bool){
         }
         packet.version = ProtocolVersion::VERSION_1;
     }
-    
-    packet.timestamp = j["timestamp"];
-    packet.module = j["module"];
     
     return packet;
 }
